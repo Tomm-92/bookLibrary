@@ -7,8 +7,8 @@ describe('/readers', () => {
   before(async () => Reader.sequelize.sync());
 
   beforeEach(async () => {
-      await Reader.destroy({ where: {} });
-  })
+    await Reader.destroy({ where: {} });
+})
 
   describe('with no records in the database', () => {
     describe('POST /readers', () => {
@@ -17,14 +17,15 @@ describe('/readers', () => {
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
         });
-
-        const newReaderRecord = await Reader.findByPk(response.body.id, { raw: true });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
 
         expect(response.status).to.equal(201);
         expect(response.body.name).to.equal('Elizabeth Bennet');
-expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
-expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
+        expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
+        expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
       });
     });
-  });
+  })
 });
