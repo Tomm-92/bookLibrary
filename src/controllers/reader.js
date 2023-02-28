@@ -11,16 +11,22 @@ const allUsers = async (req, res) => {
 };
 
 const userById = async (req, res) => {
+  
   const { id } = req.params;
+  const reader = await Reader.findByPk(id)
   try {
-    const newReader = await Reader.findByPk(id);
-    if (newReader) {
-      res.status(200).json(newReader);
-    }
-    res.status(404).json({ error: 'The reader could not be found.' });
-  } catch (err) {
-    res.status(500).json(err.message);
+  if (!reader) {
+    res
+    .status(404)
+    .json({ error: 'The reader could not be found.' });
+  } else {
+    res
+    .status(200)
+    .json(reader);
   }
+} catch (err) {
+  res.status(500).json(err.message);
+}
 };
 
 const updateById = async (req, res) => {
