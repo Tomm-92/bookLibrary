@@ -12,7 +12,7 @@ const allUsers = async (req, res) => {
 
 const userById = async (req, res) => {
   
-  const { id } = req.params;
+ const { id } = req.params;
   const reader = await Reader.findByPk(id)
   try {
   if (!reader) {
@@ -24,10 +24,9 @@ const userById = async (req, res) => {
     .status(200)
     .json(reader);
   }
-} catch (err) {
+ } catch (err) {
   res.status(500).json(err.message);
-}
-};
+}}
 
 const updateById = async (req, res) => {
   const { id } = req.params;
