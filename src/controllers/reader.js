@@ -31,8 +31,7 @@ const updateById = async (req, res) => {
   try {
     if (user) {
       console.log('id valid')
-      const updatedReader = await Reader.update({email}, { where: { id } });
-      console.log(updatedReader)
+      await Reader.update({email}, { where: { id } });
       res.status(200).json(email);
     } else {
       res.status(404).json({ error: 'The reader could not be found.' });
@@ -42,9 +41,26 @@ const updateById = async (req, res) => {
   }
 };
 
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  const user = await Reader.findByPk(id);
+
+  try {
+    if (user) {
+    const deleteReader = await Reader.destroy({where: {id}});
+    res.status(204).json(deleteReader)
+  } else {
+    res.status(404).json({error: 'The reader could not be found.'})
+  }
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+}; 
+
 module.exports = {
   createUser,
   allUsers,
   userById,
   updateById,
+  deleteById
 };

@@ -6,6 +6,7 @@ router.post('/', readerController.createUser);
 router.get('/', readerController.allUsers);
 router.get('/:id', readerController.userById);
 router.patch('/:id', readerController.updateById)
+router.delete('/:id', readerController.deleteById);
 
 
 module.exports = router;
