@@ -77,6 +77,66 @@ describe('/books', () => {
       });
     });
 
+    describe('GET /books/:id', () => {
+      it('gets book record by id', async () => {
+        const book = books[0];
+        const response = await request(app).get(`/books/${book.id}`);
+
+        expect(response.status).to.equal(200);
+        expect(response.body.title).to.equal(book.title);
+        expect(response.body.author).to.equal(book.author);
+        expect(response.body.genre).to.equal(book.genre);
+        expect(response.body.ISBN).to.equal(book.ISBN);
+      });
+
+      it('returns a 404 if the reader does not exist', async () => {
+        const response = await request(app).get('/books/12345');
+
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('The book could not be found.');
+      });
+    });
+
+    describe('DELETE /books/:id', () => {
+      it('deletes book record by id', async () => {
+        const book = books[0];
+        const response = await request(app).delete(`/books/${book.id}`);
+        const deletedBook = await Book.findByPk(book.id, { raw: true });
+
+        expect(response.status).to.equal(204);
+        expect(deletedBook).to.equal(null);
+      });
+
+      it('returns a 404 if the book does not exist', async () => {
+        const response = await request(app).delete('/books/12345');
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('The book could not be found.');
+      });
+    });
+
+    describe('PATCH /books/:id', () => {
+      it('updates books title by id', async () => {
+        const book = books[0];
+        const response = await request(app)
+          .patch(`/books/${book.id}`)
+          .send({ title: 'A storm of swords' });
+        const updatedBookRecord = await Book.findByPk(book.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(200);
+        expect(updatedBookRecord.email).to.equal('A storm of swords');
+      });
+
+      it('returns a 404 if the book does not exist', async () => {
+        const response = await request(app)
+          .patch('/books/12345')
+          .send({ title: 'A storm of swords' });
+
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('The book could not be found.');
+      });
+    });
 
 
 

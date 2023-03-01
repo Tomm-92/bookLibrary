@@ -10,7 +10,7 @@ describe('/readers', () => {
     await Reader.destroy({ where: {} });
   });
 
-  describe('with no records in the database', () => {
+  describe('with no books records in the database', () => {
     describe('POST /readers', () => {
       it('creates a new reader in the database', async () => {
         const response = await request(app).post('/readers').send({
