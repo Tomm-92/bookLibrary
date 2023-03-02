@@ -2,6 +2,7 @@ const { Reader } = require('../models');
 
 const createUser = async (req, res) => {
   const newReader = await Reader.create(req.body);
+  console.log(newReader)
   res.status(201).json(newReader);
 };
 
