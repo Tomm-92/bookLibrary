@@ -24,12 +24,34 @@ describe('/readers', () => {
 
         expect(response.status).to.equal(201);
         expect(response.body.name).to.equal('Elizabeth Bennet');
+        expect(response.body.email).to.equal('future_ms_darcy@gmail.com');
+        expect(response.body.password).to.equal('secretpassword');
+
         expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
         expect(newReaderRecord.password).to.equal('secretpassword');
       });
+
+
+     /*it('errors if an email or password are in the wrong format', async () => {
+        const response = await request(app).post('/readers').send({
+          name: 'Elizabeth Bennet',
+          email: 'future_ms_darcygmail.com',
+          password: '123',
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.errors.length).to.equal(2);
+       expect(newReaderRecord).to.equal(null); 
+      }); */
+    }); 
+
+
     });
-  });
+
 
   describe('with records in the database', () => {
     let readers;
@@ -123,4 +145,4 @@ describe('/readers', () => {
       });
     });
   });
-});
+}); 
