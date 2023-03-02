@@ -42,7 +42,7 @@ const deleteBookById = async (req, res) => {
   }
 }
 
-
+// NEED TO UPDATE THIS CONTROLLER SO IT CAN UPDATE MULTIPLE FIELDS AT ONCE 
 const updateBookById = async (req, res) => {
   const { id } = req.params;
   const {title}  = req.body
