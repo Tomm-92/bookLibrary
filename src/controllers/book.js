@@ -43,23 +43,23 @@ const deleteBookById = async (req, res) => {
 }
 
 
-const updateById = async (req, res) => {
-  const {id} = req.params
-  const book = await Book.findByPk(id)
-  const update = req.body
+const updateBookById = async (req, res) => {
+  const { id } = req.params;
+  const {title}  = req.body
+  const book = await Book.findByPk(id);
 
   try {
-    if (!book) {
-      res.status(404).json({error: 'The book could not be found.'})
+    if (book) {
+      await Book.update({title}, { where: { id } });
+      res.status(200).json(title);
     } else {
-      const updatedBook = await Book.update(update, {where: {id}})
-      res.status(200).json(updatedBook)
+      res.status(404).json({ error: 'The book could not be found.' });
     }
   } catch (err) {
-    res.status(500).json(err.message)
+    res.status(500).json(err.message);
   }
-}
+};
 
 
 
-  module.exports = {createUser, getBooks, getBookbyId, deleteBookById, updateById};
+  module.exports = {createUser, getBooks, getBookbyId, deleteBookById, updateBookById};

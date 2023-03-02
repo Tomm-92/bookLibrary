@@ -125,7 +125,7 @@ describe('/books', () => {
         });
 
         expect(response.status).to.equal(200);
-        expect(updatedBookRecord.email).to.equal('A storm of swords');
+        expect(updatedBookRecord.title).to.equal('A storm of swords');
       });
 
       it('returns a 404 if the book does not exist', async () => {
