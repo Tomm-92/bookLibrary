@@ -1,71 +1,26 @@
-const { Reader } = require('../models');
+const {
+  getAllItems,
+  getItemById,
+  deleteById,
+  createItem,
+  updateItem,
+} = require('./helpers');
 
-const createUser = async (req, res) => {
-  const newReader = await Reader.create(req.body);
-  res.status(201).json(newReader);
-};
+const getUsers = (_, res) => getAllItems(res, 'reader');
 
-const allUsers = async (req, res) => {
-  const newReader = await Reader.findAll();
-  res.status(200).json(newReader);
-};
+const getUserById = (req, res) => getItemById(res, 'reader', req.params.id);
 
-const userById = async (req, res) => {
-  
- const { id } = req.params;
-  const reader = await Reader.findByPk(id)
-  try {
-  if (!reader) {
-    res
-    .status(404)
-    .json({ error: 'The reader could not be found.' });
-  } else {
-    res
-    .status(200)
-    .json(reader);
-  }
- } catch (err) {
-  res.status(500).json(err.message);
-}}
+const deleteUserById = (req, res) => deleteById(res, 'reader', req.params.id);
 
-const updateById = async (req, res) => {
-  const { id } = req.params;
-  const { email}  = req.body;
-  const user = await Reader.findByPk(id);
+const createUser = (req, res) => createItem(res, 'reader', req.body);
 
-  try {
-    if (user) {
-      console.log('id valid')
-      await Reader.update({email}, { where: { id } });
-      res.status(200).json(email);
-    } else {
-      res.status(404).json({ error: 'The reader could not be found.' });
-    }
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-};
-
-const deleteById = async (req, res) => {
-  const { id } = req.params;
-  const user = await Reader.findByPk(id);
-
-  try {
-    if (user) {
-    const deleteReader = await Reader.destroy({where: {id}});
-    res.status(204).json(deleteReader)
-  } else {
-    res.status(404).json({error: 'The reader could not be found.'})
-  }
-  } catch (err) {
-    res.status(500).json(err.message);
-  }
-}; 
+const updateUser = (req, res) => updateItem(res, 'reader', req.params.id, req.body); 
 
 module.exports = {
+  getUsers,
+  getUserById,
+  deleteUserById,
   createUser,
-  allUsers,
-  userById,
-  updateById,
-  deleteById
-};
+  updateUser};
+
+

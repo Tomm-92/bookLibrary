@@ -25,11 +25,27 @@ describe('/books', () => {
 
         expect(response.status).to.equal(201);
         expect(response.body.title).to.equal('LOTR The Fellowship of The Ring');
+        expect(response.body.author).to.equal('JRR Tolkien');
+        expect(response.body.ISBN).to.equal('12345678910');
         expect(newBookRecord.title).to.equal('LOTR The Fellowship of The Ring');
         expect(newBookRecord.author).to.equal('JRR Tolkien');
         expect(newBookRecord.genre).to.equal('Fantasy');
         expect(newBookRecord.ISBN).to.equal('12345678910');
       });
+
+      it('cannot create a book if there is no author or title', async () => {
+        const response = await request(app).post('/books').send({});
+        const newBookRecord = await Book.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(404);
+        expect(response.body.errors.length).to.equal(2);
+        expect(newBookRecord).to.equal(null);
+      });
+
+
+
     });
   });
 
@@ -125,7 +141,7 @@ describe('/books', () => {
         });
 
         expect(response.status).to.equal(200);
-        expect(updatedBookRecord.email).to.equal('A storm of swords');
+        expect(updatedBookRecord.title).to.equal('A storm of swords');
       });
 
       it('returns a 404 if the book does not exist', async () => {
@@ -137,8 +153,5 @@ describe('/books', () => {
         expect(response.body.error).to.equal('The book could not be found.');
       });
     });
-
-
-
   });
 });

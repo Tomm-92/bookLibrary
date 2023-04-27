@@ -4,7 +4,7 @@ const { Reader } = require('../src/models');
 const app = require('../src/app');
 
 describe('/readers', () => {
-  before(async () => Reader.sequelize.sync({force: true}));
+  before(async () => Reader.sequelize.sync({ force: true }));
 
   beforeEach(async () => {
     await Reader.destroy({ where: {} });
@@ -24,9 +24,53 @@ describe('/readers', () => {
 
         expect(response.status).to.equal(201);
         expect(response.body.name).to.equal('Elizabeth Bennet');
+        expect(response.body.email).to.equal('future_ms_darcy@gmail.com');
+        expect(response.body.password).to.equal('secretpassword');
+
         expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
         expect(newReaderRecord.password).to.equal('secretpassword');
+      });
+
+      it('errors if an email or password are in the wrong format', async () => {
+        const response = await request(app).post('/readers').send({
+          name: 'Elizabeth Bennet',
+          email: 'future_ms_darcygmail.com',
+          password: '123',
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(404);
+        expect(response.body.errors.length).to.equal(2);
+        expect(newReaderRecord).to.equal(null);
+      });
+
+      it('errors if any of the fields are missing', async () => {
+        const response = await request(app).post('/readers').send({});
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(404);
+        expect(response.body.errors.length).to.equal(3);
+        expect(newReaderRecord).to.equal(null);
+      });
+
+      it('errors if name is an empty string', async () => {
+        const response = await request(app).post('/readers').send({
+          name: '',
+          password: '12345667895678',
+          email: 'email@domain.com',
+        });
+        const newReaderRecord = await Reader.findByPk(response.body.id, {
+          raw: true,
+        });
+
+        expect(response.status).to.equal(404);
+        expect(response.body.errors.length).to.equal(1);
+        expect(newReaderRecord).to.equal(null);
       });
     });
   });
@@ -39,10 +83,18 @@ describe('/readers', () => {
         Reader.create({
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
-          password: 'secretpassword'
+          password: 'secretpassword',
         }),
-        Reader.create({ name: 'Arya Stark', email: 'vmorgul@me.com', password: 'passwordsecret' }),
-        Reader.create({ name: 'Lyra Belacqua', email: 'darknorth123@msn.org', password: 'supersecret' }),
+        Reader.create({
+          name: 'Arya Stark',
+          email: 'vmorgul@me.com',
+          password: 'passwordsecret',
+        }),
+        Reader.create({
+          name: 'Lyra Belacqua',
+          email: 'darknorth123@msn.org',
+          password: 'supersecret',
+        }),
       ]);
     });
 
